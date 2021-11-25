@@ -1,0 +1,229 @@
+{
+  "message": {
+    "bestmove": "c6d4",
+    "info": [
+      { "string": "NNUE evaluation using nn-13406b1dcbe0.nnue enabled" },
+      {
+        "depth": 1,
+        "seldepth": 1,
+        "time": 2,
+        "nodes": 122,
+        "nps": 61000,
+        "tbhits": 0,
+        "score": { "unit": "cp", "value": -36 },
+        "multipv": 1,
+        "pv": "a7a6"
+      },
+      {
+        "depth": 1,
+        "seldepth": 1,
+        "time": 2,
+        "nodes": 122,
+        "nps": 61000,
+        "tbhits": 0,
+        "score": { "unit": "cp", "value": -39 },
+        "multipv": 2,
+        "pv": "g8f6"
+      },
+      {
+        "depth": 1,
+        "seldepth": 1,
+        "time": 2,
+        "nodes": 122,
+        "nps": 61000,
+        "tbhits": 0,
+        "score": { "unit": "cp", "value": -52 },
+        "multipv": 3,
+        "pv": "c6d4"
+      },
+      {
+        "depth": 1,
+        "seldepth": 1,
+        "time": 2,
+        "nodes": 122,
+        "nps": 61000,
+        "tbhits": 0,
+        "score": { "unit": "cp", "value": -52 },
+        "multipv": 4,
+        "pv": "f8c5"
+      },
+      {
+        "depth": 2,
+        "seldepth": 2,
+        "time": 2,
+        "nodes": 277,
+        "nps": 138500,
+        "tbhits": 0,
+        "score": { "unit": "cp", "value": 22 },
+        "multipv": 1,
+        "pv": "f8d6 b5c6 d7c6"
+      },
+      {
+        "depth": 2,
+        "seldepth": 2,
+        "time": 2,
+        "nodes": 277,
+        "nps": 138500,
+        "tbhits": 0,
+        "score": { "unit": "cp", "value": -2 },
+        "multipv": 2,
+        "pv": "g8f6 b5c6"
+      },
+      {
+        "depth": 2,
+        "seldepth": 2,
+        "time": 2,
+        "nodes": 277,
+        "nps": 138500,
+        "tbhits": 0,
+        "score": { "unit": "cp", "value": -20 },
+        "multipv": 3,
+        "pv": "f8c5 b5c6"
+      },
+      {
+        "depth": 2,
+        "seldepth": 2,
+        "time": 2,
+        "nodes": 277,
+        "nps": 138500,
+        "tbhits": 0,
+        "score": { "unit": "cp", "value": -52 },
+        "multipv": 4,
+        "pv": "c6d4 f3d4"
+      },
+      {
+        "depth": 3,
+        "seldepth": 4,
+        "time": 3,
+        "nodes": 744,
+        "nps": 248000,
+        "tbhits": 0,
+        "score": { "unit": "cp", "value": -37 },
+        "multipv": 1,
+        "pv": "g8f6 b1c3 c6d4 f3d4 e5d4"
+      },
+      {
+        "depth": 3,
+        "seldepth": 3,
+        "time": 3,
+        "nodes": 744,
+        "nps": 248000,
+        "tbhits": 0,
+        "score": { "unit": "cp", "value": -52 },
+        "multipv": 2,
+        "pv": "c6d4 f3d4 e5d4"
+      },
+      {
+        "depth": 3,
+        "seldepth": 4,
+        "time": 3,
+        "nodes": 744,
+        "nps": 248000,
+        "tbhits": 0,
+        "score": { "unit": "cp", "value": -54 },
+        "multipv": 3,
+        "pv": "g8e7 b1c3 c6d4 f3e5"
+      },
+      {
+        "depth": 3,
+        "seldepth": 3,
+        "time": 3,
+        "nodes": 744,
+        "nps": 248000,
+        "tbhits": 0,
+        "score": { "unit": "cp", "value": -76 },
+        "multipv": 4,
+        "pv": "g7g6 d2d4 e5d4"
+      },
+      {
+        "depth": 4,
+        "seldepth": 4,
+        "time": 4,
+        "nodes": 1880,
+        "nps": 470000,
+        "tbhits": 0,
+        "score": { "unit": "cp", "value": -51 },
+        "multipv": 1,
+        "pv": "g8f6 d2d3 d7d6 b1c3"
+      },
+      {
+        "depth": 4,
+        "seldepth": 4,
+        "time": 4,
+        "nodes": 1880,
+        "nps": 470000,
+        "tbhits": 0,
+        "score": { "unit": "cp", "value": -63 },
+        "multipv": 2,
+        "pv": "g8e7 d2d4 e5d4"
+      },
+      {
+        "depth": 4,
+        "seldepth": 4,
+        "time": 4,
+        "nodes": 1880,
+        "nps": 470000,
+        "tbhits": 0,
+        "score": { "unit": "cp", "value": -66 },
+        "multipv": 3,
+        "pv": "f8c5 b1c3 c6d4 f3e5"
+      },
+      {
+        "depth": 4,
+        "seldepth": 4,
+        "time": 4,
+        "nodes": 1880,
+        "nps": 470000,
+        "tbhits": 0,
+        "score": { "unit": "cp", "value": -96 },
+        "multipv": 4,
+        "pv": "c6d4 f3d4 e5d4 e1g1"
+      },
+      {
+        "depth": 5,
+        "seldepth": 5,
+        "time": 5,
+        "nodes": 2502,
+        "nps": 500400,
+        "tbhits": 0,
+        "score": { "unit": "cp", "value": -57 },
+        "multipv": 1,
+        "pv": "c6d4 f3d4 e5d4 e1g1 c7c6"
+      },
+      {
+        "depth": 5,
+        "seldepth": 5,
+        "time": 5,
+        "nodes": 2502,
+        "nps": 500400,
+        "tbhits": 0,
+        "score": { "unit": "cp", "value": -66 },
+        "multipv": 2,
+        "pv": "g8f6 d2d3"
+      },
+      {
+        "depth": 4,
+        "seldepth": 4,
+        "time": 5,
+        "nodes": 2502,
+        "nps": 500400,
+        "tbhits": 0,
+        "score": { "unit": "cp", "value": -63 },
+        "multipv": 3,
+        "pv": "g8e7 d2d4 e5d4"
+      },
+      {
+        "depth": 4,
+        "seldepth": 4,
+        "time": 5,
+        "nodes": 2502,
+        "nps": 500400,
+        "tbhits": 0,
+        "score": { "unit": "cp", "value": -66 },
+        "multipv": 4,
+        "pv": "f8c5 b1c3 c6d4 f3e5"
+      }
+    ],
+    "ponder": "f3d4"
+  }
+}

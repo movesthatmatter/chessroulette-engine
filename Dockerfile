@@ -27,7 +27,10 @@ RUN echo "arch:$( uname -m )" \
   ;; \
 esac
 
-FROM alpine:latest
+# FROM alpine:latest
+# # Common build stage
+FROM mhart/alpine-node:14 as common-build-stage
+
 LABEL maintainer="tomasz@chorwat.pl"
 LABEL project="https://github.com/tchorwat/stockfish"
 
@@ -46,11 +49,8 @@ COPY --chown=stockfish:stockfish --from=builder /Stockfish/Copying.txt /stockfis
 COPY --chown=stockfish:stockfish source.txt /stockfish/
 COPY --chown=stockfish:stockfish --from=builder /Stockfish/src/*.nnue /stockfish/
 
-# EXPOSE 23249
+EXPOSE 23249
 # ENTRYPOINT ["/entrypoint.sh"]
-
-# # Common build stage
-FROM node:16 as common-build-stage
 
 WORKDIR /
 

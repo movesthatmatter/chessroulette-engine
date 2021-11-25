@@ -1,20 +1,64 @@
+import bodyParser from "body-parser";
+import { GameRecord } from "dstnd-io";
 import express, { Application, Request, Response } from "express";
+import { Engine } from "node-uci";
+import { Analyzer, GameToAnalyze } from "./src/Engine";
 
 const app: Application = express();
-const port = 6000;
+const port = 5454;
 
 // Body parsing Middleware
-app.use(express.json());
+// app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/", async (req: Request, res: Response): Promise<Response> => {
-  return res.status(200).send({
-    message: "Hello World!",
+app.use(bodyParser.json());
+
+const analyzersByGameId: Record<GameRecord["id"], Analyzer> = {};
+
+const getExistentAnalyzerOrCreateNew = (game: GameToAnalyze) => {
+  const { [game.id]: engine } = analyzersByGameId;
+
+  if (engine && !engine.hasQuit) {
+    return engine;
+  }
+
+  analyzersByGameId[game.id] = new Analyzer(game, {
+    searchOpts: { depth: 10, nodes: 25000 },
   });
+
+  return analyzersByGameId[game.id];
+};
+
+app.post("/analyze", async (req: Request, res: Response) => {
+  try {
+    const { gameId, fen } = req.body;
+
+    if (!(gameId && fen)) {
+      throw new Error("Body not good");
+    }
+
+    const engine = getExistentAnalyzerOrCreateNew({ id: gameId, fen });
+
+    const engineRes = await engine.updateAndSearchOnce(fen);
+
+    // console.log("engine res", engineRes);
+
+    return res.status(200).send({
+      // message: "ok",
+      // works: 'good',
+      // ...req.body,
+      ...engineRes,
+    });
+  } catch (e) {
+    console.error("Stockfish errror", e);
+    return res.status(500).send({
+      error: e,
+    });
+  }
 });
 
 try {
-  app.listen(port, (): void => {
+  app.listen(port, () => {
     console.log(`Connected successfully on port ${port}`);
   });
 } catch (error) {
