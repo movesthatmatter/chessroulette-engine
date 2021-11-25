@@ -10,10 +10,10 @@ export type GameToAnalyze = {
   fen: ChessGameStateFen;
 };
 
-type Opts = {
-  searchOpts: SearchOptions;
-  searchInfiniteOpts: SearchOptions;
-  searchInfiniteWaitMs: number;
+export type AnalyzerOpts = {
+  searchOpts?: SearchOptions;
+  searchInfiniteOpts?: SearchOptions;
+  searchInfiniteWaitMs?: number;
 };
 
 // const transformSearchResult = (data: SearchResult) => {
@@ -29,13 +29,13 @@ export class Analyzer {
 
   private initiatedEngine: Promise<Engine>;
 
-  private opts: Opts = {
+  private opts: AnalyzerOpts = {
     searchOpts: { depth: 7, nodes: 2500 },
     searchInfiniteOpts: { depth: 3, nodes: 250 },
     searchInfiniteWaitMs: 5 * 1000,
   };
 
-  constructor(private game: GameToAnalyze, opts: Partial<Opts> = {}) {
+  constructor(private game: GameToAnalyze, opts: Partial<AnalyzerOpts> = {}) {
     this.opts = {
       ...this.opts,
       ...opts,
@@ -43,6 +43,7 @@ export class Analyzer {
 
     this.initiatedEngine = this.initiate(
       new Engine("/stockfish/stockfish"),
+      // new Engine("/opt/homebrew/bin/stockfish"),
       game
     );
   }
@@ -50,13 +51,16 @@ export class Analyzer {
   private async initiate(engine: Engine, game: GameToAnalyze) {
     await engine.init();
     await engine.setoption("UCI_AnalyseMode", "true");
-    await engine.setoption("MultiPV", "4");
+    await engine.setoption("MultiPV", "3");
+    await engine.setoption("Hash", "50");
     await engine.isready();
     await engine.ucinewgame();
+    await engine.position(game.fen);
 
     console.log("[Analyzer] Engine Initiated", {
-      gameId: this.game.id,
-      opts: (engine as any).options,
+      gameId: game.id,
+      engineOpts: (engine as any).options,
+      config: this.opts,
     });
 
     return engine;
@@ -79,7 +83,7 @@ export class Analyzer {
 
     await engine.isready();
 
-    return await engine.go(this.opts.searchOpts);
+    return await engine.go(this.opts.searchOpts || {});
   }
 
   async updateAndSearchInfinite(fen: ChessGameStateFen, onFound: () => {}) {
@@ -88,7 +92,7 @@ export class Analyzer {
 
     await engine.isready();
 
-    const emitter = engine.goInfinite(this.opts.searchInfiniteOpts);
+    const emitter = engine.goInfinite(this.opts.searchInfiniteOpts || {});
 
     emitter.on("data", (a) => {
       // TODO: Test

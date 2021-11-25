@@ -1,8 +1,8 @@
 import bodyParser from "body-parser";
 import { GameRecord } from "dstnd-io";
 import express, { Application, Request, Response } from "express";
-import { Engine } from "node-uci";
-import { Analyzer, GameToAnalyze } from "./src/Engine";
+import { SearchOptions } from "node-uci";
+import { Analyzer, AnalyzerOpts, GameToAnalyze } from "./src/Engine";
 
 const app: Application = express();
 const port = 5454;
@@ -15,7 +15,16 @@ app.use(bodyParser.json());
 
 const analyzersByGameId: Record<GameRecord["id"], Analyzer> = {};
 
-const getExistentAnalyzerOrCreateNew = (game: GameToAnalyze) => {
+const getExistentAnalyzerByGameId = (gameId: GameToAnalyze["id"]) => {
+  const { [gameId]: engine } = analyzersByGameId;
+
+  return engine;
+};
+
+const getExistentAnalyzerOrCreateNew = (
+  game: GameToAnalyze,
+  opts?: AnalyzerOpts
+) => {
   const { [game.id]: engine } = analyzersByGameId;
 
   if (engine && !engine.hasQuit) {
@@ -23,7 +32,8 @@ const getExistentAnalyzerOrCreateNew = (game: GameToAnalyze) => {
   }
 
   analyzersByGameId[game.id] = new Analyzer(game, {
-    searchOpts: { depth: 10, nodes: 25000 },
+    ...{ searchOpts: { depth: 25, nodes: 25 * 10000 } },
+    ...opts,
   });
 
   return analyzersByGameId[game.id];
@@ -35,6 +45,8 @@ app.get("/", async (req, res) => {
 
   const engineRes = await engine.updateAndSearchOnce(fen);
 
+  await engine.quit();
+
   return res.status(200).send({
     ok: true,
     engineRes,
@@ -43,26 +55,52 @@ app.get("/", async (req, res) => {
 
 app.post("/analyze", async (req: Request, res: Response) => {
   try {
-    const { gameId, fen } = req.body;
+    const { gameId, fen, searchOpts } = req.body;
 
     if (!(gameId && fen)) {
       throw new Error("Body not good");
     }
 
-    const engine = getExistentAnalyzerOrCreateNew({ id: gameId, fen });
-
+    const engine = getExistentAnalyzerOrCreateNew(
+      { id: gameId, fen },
+      typeof searchOpts === "object"
+        ? { searchOpts: searchOpts as SearchOptions }
+        : {}
+    );
     const engineRes = await engine.updateAndSearchOnce(fen);
 
-    // console.log("engine res", engineRes);
-
-    return res.status(200).send({
-      // message: "ok",
-      // works: 'good',
-      // ...req.body,
-      ...engineRes,
-    });
+    return res.status(200).send(engineRes);
   } catch (e) {
-    console.error("Stockfish errror", e);
+    console.error("Engine errror", e);
+    return res.status(500).send({
+      error: e,
+    });
+  }
+});
+
+app.post("/quit", async (req: Request, res: Response) => {
+  try {
+    const { gameId } = req.body;
+
+    if (!gameId) {
+      throw new Error("Body not good");
+    }
+
+    const engine = getExistentAnalyzerByGameId(gameId);
+
+    if (!engine) {
+      return res.status(200).send({ message: "Engine Not Existent" });
+    }
+
+    if (engine.hasQuit) {
+      return res.status(200).send({ message: "Engine Already Quitted" });
+    }
+
+    await engine.quit();
+
+    return res.status(200).send({ message: "Engine Quitted" });
+  } catch (e) {
+    console.error("Engine errror", e);
     return res.status(500).send({
       error: e,
     });
