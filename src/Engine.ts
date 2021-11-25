@@ -42,7 +42,7 @@ export class Analyzer {
     };
 
     this.initiatedEngine = this.initiate(
-      new Engine("/opt/homebrew/bin/stockfish"),
+      new Engine("/stockfish/stockfish"),
       game
     );
   }

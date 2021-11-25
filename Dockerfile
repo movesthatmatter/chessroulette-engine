@@ -34,6 +34,8 @@ FROM mhart/alpine-node:14 as common-build-stage
 LABEL maintainer="tomasz@chorwat.pl"
 LABEL project="https://github.com/tchorwat/stockfish"
 
+RUN apk add git
+
 COPY ./entrypoint.sh /
 
 RUN chmod +x /entrypoint.sh \
@@ -42,12 +44,16 @@ RUN chmod +x /entrypoint.sh \
  && adduser -u 1000 -G stockfish -HD stockfish
 
 WORKDIR /stockfish/
-USER stockfish:stockfish
+#USER stockfish:stockfish
 
-COPY --chown=stockfish:stockfish --from=builder /Stockfish/src/stockfish /stockfish/
-COPY --chown=stockfish:stockfish --from=builder /Stockfish/Copying.txt /stockfish/
-COPY --chown=stockfish:stockfish source.txt /stockfish/
-COPY --chown=stockfish:stockfish --from=builder /Stockfish/src/*.nnue /stockfish/
+#COPY --chown=stockfish:stockfish --from=builder /Stockfish/src/stockfish /stockfish/
+#COPY --chown=stockfish:stockfish --from=builder /Stockfish/Copying.txt /stockfish/
+#COPY --chown=stockfish:stockfish source.txt /stockfish/
+#COPY --chown=stockfish:stockfish --from=builder /Stockfish/src/*.nnue /stockfish/
+COPY  --from=builder /Stockfish/src/stockfish /stockfish/
+COPY  --from=builder /Stockfish/Copying.txt /stockfish/
+COPY source.txt /stockfish/
+COPY --from=builder /Stockfish/src/*.nnue /stockfish/
 
 EXPOSE 23249
 # ENTRYPOINT ["/entrypoint.sh"]

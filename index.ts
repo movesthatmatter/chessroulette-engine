@@ -29,6 +29,18 @@ const getExistentAnalyzerOrCreateNew = (game: GameToAnalyze) => {
   return analyzersByGameId[game.id];
 };
 
+app.get("/", async (req, res) => {
+  const fen = "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1";
+  const engine = getExistentAnalyzerOrCreateNew({ id: "test", fen });
+
+  const engineRes = await engine.updateAndSearchOnce(fen);
+
+  return res.status(200).send({
+    ok: true,
+    engineRes,
+  });
+});
+
 app.post("/analyze", async (req: Request, res: Response) => {
   try {
     const { gameId, fen } = req.body;
