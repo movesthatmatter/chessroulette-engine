@@ -55,7 +55,7 @@ COPY  --from=builder /Stockfish/Copying.txt /stockfish/
 COPY source.txt /stockfish/
 COPY --from=builder /Stockfish/src/*.nnue /stockfish/
 
-EXPOSE 23249
+#EXPOSE 23249
 # ENTRYPOINT ["/entrypoint.sh"]
 
 WORKDIR /
@@ -66,7 +66,9 @@ WORKDIR /app
 
 RUN npm install
 
-EXPOSE 6000
+EXPOSE 5454
+
+ENV PORT 5454
 
 # Development build stage
 # FROM common-build-stage as development-build-stage
