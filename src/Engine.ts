@@ -1,13 +1,15 @@
-import { ChessGameStateFen, GameRecord } from "dstnd-io";
-import { Engine, EngineChain, SearchOptions, SearchResult } from "node-uci";
+// import { ChessGameStateFen, GameRecord } from "dstnd-io";
+import { Engine, EngineChain, SearchOptions, SearchResult } from 'node-uci';
 
 // const stockfish = new UCIEngine('/opt/homebrew/bin/stockfish');
 
 // stockfish.init()
 
+type ChessFen = string;
+
 export type GameToAnalyze = {
-  id: GameRecord["id"];
-  fen: ChessGameStateFen;
+  id: string;
+  fen: string;
 };
 
 export type AnalyzerOpts = {
@@ -42,22 +44,22 @@ export class Analyzer {
     };
 
     this.initiatedEngine = this.initiate(
-      new Engine("/stockfish/stockfish"),
-      // new Engine("/opt/homebrew/bin/stockfish"),
+      // new Engine('/stockfish/stockfish'),
+      new Engine("/opt/homebrew/bin/stockfish"),
       game
     );
   }
 
   private async initiate(engine: Engine, game: GameToAnalyze) {
     await engine.init();
-    await engine.setoption("UCI_AnalyseMode", "true");
-    await engine.setoption("MultiPV", "3");
-    await engine.setoption("Hash", "50");
+    await engine.setoption('UCI_AnalyseMode', 'true');
+    await engine.setoption('MultiPV', '3');
+    await engine.setoption('Hash', '50');
     await engine.isready();
     await engine.ucinewgame();
     await engine.position(game.fen);
 
-    console.log("[Analyzer] Engine Initiated", {
+    console.log('[Analyzer] Engine Initiated', {
       gameId: game.id,
       engineOpts: (engine as any).options,
       config: this.opts,
@@ -66,7 +68,7 @@ export class Analyzer {
     return engine;
   }
 
-  private async setPositionCmd(fen: ChessGameStateFen) {
+  private async setPositionCmd(fen: ChessFen) {
     if (this.hasQuit) {
       return;
     }
@@ -77,7 +79,7 @@ export class Analyzer {
     await engine.position(fen);
   }
 
-  async updateAndSearchOnce(fen: ChessGameStateFen) {
+  async updateAndSearchOnce(fen: ChessFen) {
     await this.setPositionCmd(fen);
     const engine = await this.initiatedEngine;
 
@@ -86,7 +88,7 @@ export class Analyzer {
     return await engine.go(this.opts.searchOpts || {});
   }
 
-  async updateAndSearchInfinite(fen: ChessGameStateFen, onFound: () => {}) {
+  async updateAndSearchInfinite(fen: ChessFen, onFound: () => {}) {
     await this.setPositionCmd(fen);
     const engine = await this.initiatedEngine;
 
@@ -94,9 +96,9 @@ export class Analyzer {
 
     const emitter = engine.goInfinite(this.opts.searchInfiniteOpts || {});
 
-    emitter.on("data", (a) => {
+    emitter.on('data', (a) => {
       // TODO: Test
-      console.log("data", a);
+      console.log('data', a);
     });
 
     const bestMove = new Promise(async (resolve) => {
